@@ -1,12 +1,37 @@
 /* eslint-disable */
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../app/store';
+import { Todo } from '../../types/Todo';
+import classNames from 'classnames';
 
-export const TodoList: React.FC = () => {
+
+type Props = {
+  handleTodoClick: (todo: Todo) => void;
+  isModalOpen: boolean;
+};
+
+export const TodoList: React.FC<Props> = ({ handleTodoClick, isModalOpen }) => {
+  const todos = useSelector((state: RootState) => state.todos)
+  const { query, status } = useSelector((state: RootState) => state.filter);
+  const visibleTodos = todos.filter(todo => {
+    const filtredTodosByQuery = todo.title.toLowerCase().includes(query.toLowerCase())
+    const filtredTodosByStatus =
+    status === 'all' ||
+    (status === 'active' && !todo.completed)||
+    (status === 'completed' && todo.completed);
+
+    return filtredTodosByQuery && filtredTodosByStatus;
+  });
+
+
+
+
   return (
     <>
-      <p className="notification is-warning">
+      {/* <p className="notification is-warning">
         There are no todos matching current filter criteria
-      </p>
+      </p> */}
 
       <table className="table is-narrow is-fullwidth">
         <thead>
@@ -25,23 +50,40 @@ export const TodoList: React.FC = () => {
         </thead>
 
         <tbody>
-          <tr data-cy="todo">
-            <td className="is-vcentered">1</td>
-            <td className="is-vcentered"> </td>
+         {visibleTodos.map(todo => {
+          return (
+            <tr data-cy="todo">
+            <td className="is-vcentered">{todo.id}</td>
+            <td className="is-vcentered">
+              {todo.completed && (
+                <span className="icon" data-cy="iconCompleted">
+                <i className="fas fa-check" />
+              </span>
+              )}
+            </td>
 
             <td className="is-vcentered is-expanded">
-              <p className="has-text-danger">delectus aut autem</p>
+              <p className={todo.completed ? "has-text-success" : "has-text-danger"}>{todo.title}</p>
             </td>
 
             <td className="has-text-right is-vcentered">
-              <button data-cy="selectButton" className="button" type="button">
+              <button
+                data-cy="selectButton"
+                className="button"
+                type="button"
+                onClick={() => handleTodoClick(todo)}
+              >
                 <span className="icon">
-                  <i className="far fa-eye" />
+                  <i className={classNames('far' ,
+                    isModalOpen ? 'fa-eye-slash' : 'fa-eye'
+                  )} />
                 </span>
               </button>
             </td>
           </tr>
-
+          )
+         })}
+{/*
           <tr data-cy="todo">
             <td className="is-vcentered">2</td>
             <td className="is-vcentered"> </td>
@@ -216,7 +258,7 @@ export const TodoList: React.FC = () => {
                 </span>
               </button>
             </td>
-          </tr>
+          </tr> */}
         </tbody>
       </table>
     </>
