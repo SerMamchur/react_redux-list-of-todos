@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Loader } from '../Loader';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../app/store';
 import { getUser } from '../../api';
 import { User } from '../../types/User';
+import { useAppSelector } from '../../app/hooks';
 
 type Props = {
   loadingModal: boolean;
@@ -14,7 +13,7 @@ export const TodoModal: React.FC<Props> = ({
   loadingModal,
   setIsModalOpen,
 }) => {
-  const todo = useSelector((state: RootState) => state.currentTodo);
+  const todo = useAppSelector(state => state.currentTodo);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -65,7 +64,7 @@ export const TodoModal: React.FC<Props> = ({
               )}
 
               {' by '}
-              <a href="mailto:Sincere@april.biz">{user?.name}</a>
+              <a href={`mailto:${user?.email}`}>{user?.name}</a>
             </p>
           </div>
         </div>

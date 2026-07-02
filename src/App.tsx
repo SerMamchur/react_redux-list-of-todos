@@ -1,19 +1,17 @@
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { Loader, TodoFilter, TodoList, TodoModal } from './components';
-import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { getTodos } from './api';
 import { setTodos } from './features/todos';
 import { setCurrentTodo } from './features/currentTodo';
 import { Todo } from './types/Todo';
+import { useAppDispatch } from './app/hooks';
 // import { setCurrentTodo } from './features/currentTodo';
 
 export const App = () => {
-  const dispatch = useDispatch();
-  // const todos = useSelector((state: RootState) => state.todos);
+  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [setErrorMesage] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [loadingModal, setLoadingModal] = useState<boolean>(false);
 
@@ -32,7 +30,6 @@ export const App = () => {
       .then(data => {
         dispatch(setTodos(data));
       })
-      .catch(() => setErrorMesage('Something wrong'))
       .finally(() => {
         setIsLoading(false);
       });
