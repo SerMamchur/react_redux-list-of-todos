@@ -1,14 +1,14 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { setQuery, setStatus } from '../../features/filter';
 import { Status } from '../../types/Status';
 import { RootState } from '../../app/store';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 const OPTIONS: Status[] = ['all', 'active', 'completed'];
 
 export const TodoFilter: React.FC = () => {
-  const dispatch = useDispatch();
-  const { query } = useSelector((state: RootState) => state.filter);
+  const dispatch = useAppDispatch();
+  const { query } = useAppSelector((state: RootState) => state.filter);
 
   return (
     <form
